@@ -1,0 +1,20 @@
+<h1>My Recipes</h1>
+<ul>
+  <% sort_recipes.each do |recipe| %>
+  <% id = recipe[0] %>
+  <li>
+  <a href='/recipe/<%= id %>'><%= recipe[1][:title] %></a>
+  <form class='inline' action='/delete/<%= id %>' method='post'>
+    <button type='submit' name='delete'>Delete</button>
+  </form>
+  </li>
+  <% end %>
+</ul>
+
+<a href='/add'><button type='button' name='add'>Add a Recipe</button></a>
+<p>
+<form class='signout' action='/signout' method='post'>
+  <button type='submit' name='signout'>Signout</button>
+</form>
+<!-- <p>signed in as <%= session[:username] %></p> -->
+</p>
