@@ -36,4 +36,24 @@ Will need erubis for erb files
 Will use bcrypt for hashing passwords
 Start with using an external location for images
 
-When saving ingredients and directions to session from form, break them into separate elements in an array for each line break. Then render them back to user as separate lines. 
+Delete recipes  
+* Create delete route
+* Create delete method - access id from session hash & delete corresponding key-value
+* Set session message: "'recipe name' deleted."
+* Add delete button to view_recipe.erb
+
+Add flash message div to layout.erb
+Style flash messages
+
+When saving ingredients and directions to session from form, break them into separate elements in an array for each line break. Then render them back to user as separate lines.
+
+Check for pre-existing recipe with identical name.
+
+Register and Sign in
+* Add Bcrypt gem
+* Create credentials document
+* Access credentials to compare username and password or write new info to it
+* create compare credentials method
+* create write new credentials method
+
+Fix grid styling of recipe page
