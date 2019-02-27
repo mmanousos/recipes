@@ -1,0 +1,28 @@
+<h1>Add a Recipe</h1>
+
+<form action="/add" method="post">
+  <p>
+    <label for='recipe'><h3>Recipe Name</h3></label>
+    <input type="text" required minlength='5' maxlength='50' id='recipe' name="recipe_name" value="">
+  </p>
+
+  <label for='ingredients'><h3>Ingredients</h3></label>
+  <textarea type="textarea" required rows='10' cols='80' id='ingredients' name="ingredients" value=""></textarea>
+<p>
+  <label for='directions'><h3>Directions</h3></label>
+  <textarea type="textarea" required rows='10' cols='80' id='directions' name="directions" value=""></textarea>
+</p>
+
+  <p>
+    <label for="image"><h3>Upload an image</h3></label>
+    <input type="text" id='image' name="image" value="">
+  </p>
+
+  <label for='notes'><h3>Notes</h3></label>
+  <textarea type="textarea" rows='10' cols='80' id='notes' name="notes" value=""></textarea>
+
+  <p>
+    <button type="submit" name="button">Add</button>
+  </p>
+</form>
+<a href="/add/cancel"><button type="button" class='cancel' name="cancel">Cancel</button></a>
