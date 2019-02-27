@@ -35,3 +35,5 @@ Notes below
 Will need erubis for erb files
 Will use bcrypt for hashing passwords
 Start with using an external location for images
+
+When saving ingredients and directions to session from form, break them into separate elements in an array for each line break. Then render them back to user as separate lines. 
