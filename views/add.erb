@@ -2,27 +2,27 @@
 
 <form action="/add" method="post">
   <p>
-    <label for='title'><h3>Recipe Name</h3></label>
+    <label for='title'><h4>Recipe Name</h4></label>
     <input type="text" required minlength='5' maxlength='50' id='title' name='title' value="">
   </p>
 
-  <label for='ingredients'><h3>Ingredients</h3></label>
-  <textarea type="textarea" required rows='10' cols='80' id='ingredients' name="ingredients" value=""></textarea>
+  <label for='ingredients'><h4>Ingredients</h4></label>
+  <textarea type="textarea" required rows='5' cols='80' id='ingredients' name="ingredients" value=""></textarea>
 <p>
-  <label for='directions'><h3>Directions</h3></label>
-  <textarea type="textarea" required rows='10' cols='80' id='directions' name="directions" value=""></textarea>
+  <label for='directions'><h4>Directions</h4></label>
+  <textarea type="textarea" required rows='5' cols='80' id='directions' name="directions" value=""></textarea>
 </p>
 
   <p>
-    <label for="image"><h3>Add an image link</h3></label>
+    <label for="image"><h4>Add an image link</h4></label>
     <input type="text" id='image' name="image" value="">
   </p>
 
-  <label for='notes'><h3>Notes</h3></label>
-  <textarea type="textarea" rows='10' cols='80' id='notes' name="notes" value=""></textarea>
+  <label for='notes'><h4>Notes</h4></label>
+  <textarea type="textarea" rows='5' cols='80' id='notes' name="notes" value=""></textarea>
 
   <p>
-    <button type="submit" name="button">Add</button>
+    <button type="submit" class='add' name="button">Add</button>
+    <a href="/add/cancel"><button type="button" class='cancel' name="cancel">Cancel</button></a>
   </p>
 </form>
-<a href="/add/cancel"><button type="button" class='cancel' name="cancel">Cancel</button></a>

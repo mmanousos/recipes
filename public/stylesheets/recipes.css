@@ -11,8 +11,49 @@ h2 {
   font-family: 'Oleo Script', cursive;
 }
 
+h4 {
+  margin-bottom: 2px;
+  margin-top: 5px;
+}
+
 .inline {
   display: inline;
+}
+
+.italic {
+  font-style: italic;
+}
+
+a {
+  text-decoration: none;
+}
+
+li {
+  list-style-type: square;
+}
+
+button {
+  color: #fff;
+  border-radius: 10px;
+  line-height: 1.75;
+}
+
+.register {
+  background-color: rgb(20, 133, 204);
+}
+
+.signin {
+  background-color: rgb(9, 113, 178);
+}
+
+.cancel,
+.signout,
+.delete {
+  background-color: rgb(255, 0, 0);
+}
+
+.add {
+  background-color: rgb(37, 219, 149);
 }
 
 .recipe {
