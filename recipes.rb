@@ -33,6 +33,10 @@ def add_recipe(title, ingredients, directions, image, notes)
                       }
 end
 
+def delete_recipe(id)
+  @recipes.delete(id)
+end
+
 get '/' do
   erb :welcome
 end
@@ -70,12 +74,19 @@ get '/recipe/:id' do
   erb :view_recipe
 end
 
+post '/delete/:id' do
+  id = params[:id].to_i
+  session[:message] = "#{@recipes[id][:title]} recipe successfully deleted."
+  delete_recipe(id)
+  redirect '/recipes'
+end
+
 get '/add' do
   erb :add
 end
 
 get '/add/cancel' do
-  redirect '/recipes' # redirect to list of recipes
+  redirect '/recipes'
 end
 
 post '/add' do

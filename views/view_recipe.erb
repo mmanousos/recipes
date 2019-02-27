@@ -31,8 +31,11 @@
   </div>
 
   <div class='buttons'>
-    <a href='/recipes'><button type='button' class='cancel' name='return'>Back to Recipes</button></a>
     <a href='/add'><button type='button' class='add' name='add'>Add a Recipe</button></a>
+    <a href='/recipes'><button type='button' class='return' name='return'>Back to Recipes</button></a>
+    <form class='inline' action='/delete/<%= @id %>' method='post'>
+      <button type='submit' class='delete' name='delete'>Delete</button>
+    </form>
   </div>
 </div>
 <p>

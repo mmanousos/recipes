@@ -42,7 +42,8 @@ button {
   background-color: rgb(20, 133, 204);
 }
 
-.signin {
+.signin,
+.return {
   background-color: rgb(9, 113, 178);
 }
 
