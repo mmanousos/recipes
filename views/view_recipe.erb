@@ -2,7 +2,7 @@
 <div class='recipe'>
   <div class='title'>
     <h1><%= recipe[:title] %></h1>
-    <a class='edit_title' href='/edit/<%= @id %>/title'><button type='button' name='edit'>Edit</button></a>
+    <a class='edit_title' href='/edit/<%= @id %>/title'><button type='button' class='edit' name='edit'>Edit</button></a>
   </div>
 
   <img class='recipe_image' src='<%= recipe[:image] %>' alt='food'>
@@ -11,7 +11,7 @@
     <h2>Ingredients</h2>
     <%= recipe[:ingredients] %>
     <br>
-    <a href='/edit/<%= @id %>/ingredients'><button type='button' name='edit'>Edit</button></a>
+    <a href='/edit/<%= @id %>/ingredients'><button type='button' class='edit' name='edit'>Edit</button></a>
   </div>
 
 
@@ -19,7 +19,7 @@
     <h2>Directions</h2>
     <%= recipe[:directions] %>
     <br>
-    <a href='/edit/<%= @id %>/directions'><button type='button' name='edit'>Edit</button></a>
+    <a href='/edit/<%= @id %>/directions'><button type='button' class='edit' name='edit'>Edit</button></a>
   </div>
 
 
@@ -27,16 +27,17 @@
     <h2>Notes</h2>
     <%= recipe[:notes] %>
     <br>
-    <a href='/edit/<%= @id %>/notes'><button type='button' name='edit'>Edit</button></a>
+    <a href='/edit/<%= @id %>/notes'><button type='button' class='edit' name='edit'>Edit</button></a>
   </div>
 
   <div class='buttons'>
-    <a href='/recipes'><button type='button' name='return'>Back to Recipes</button></a>
-    <a href='/add'><button type='button' name='add'>Add a Recipe</button></a>
+    <a href='/recipes'><button type='button' class='cancel' name='return'>Back to Recipes</button></a>
+    <a href='/add'><button type='button' class='add' name='add'>Add a Recipe</button></a>
   </div>
 </div>
-<form class='signout' action='/signout' method='post'>
-  <button type='submit' name='signout'>Signout</button>
+<p>
+<form action='/signout' method='post'>
+  <button type='submit' class='signout' name='signout'>Signout</button>
 </form>
 <!-- <p>signed in as <%= session[:username] %></p> -->
 </p>

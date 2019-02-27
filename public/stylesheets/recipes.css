@@ -38,7 +38,7 @@ button {
   line-height: 1.75;
 }
 
-.register {
+.register{
   background-color: rgb(20, 133, 204);
 }
 
@@ -54,6 +54,10 @@ button {
 
 .add {
   background-color: rgb(37, 219, 149);
+}
+
+.edit {
+  background-color: rgb(106, 164, 200);
 }
 
 .recipe {
