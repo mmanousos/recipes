@@ -24,6 +24,14 @@ def next_id
   max_id.nil? ? 1 : max_id + 1
 end
 
+def recipe_exists?(name)
+  @recipes.any? { |_, recipe| recipe[:title] == name }
+end
+
+def recipe_errors?(name)
+  session[:message] = 'A recipe with that name exists.' if recipe_exists?(name)
+end
+
 def add_recipe(title, ingredients, directions, image, notes)
   @recipes[next_id] = { title: title,
                         ingredients: ingredients,
@@ -97,7 +105,14 @@ post '/add' do
   directions = params[:directions]
   image = params[:image]
   notes = params[:notes]
-  add_recipe(title, ingredients, directions, image, notes)
-  session[:message] = 'Recipe successfully added.'
-  redirect '/recipes'
+
+  error = recipe_errors?(title)
+  if error
+    status 422
+    erb :add
+  else
+    add_recipe(title, ingredients, directions, image, notes)
+    session[:message] = 'Recipe successfully added.'
+    redirect '/recipes'
+  end
 end
