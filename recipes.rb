@@ -24,6 +24,10 @@ def next_id
   max_id.nil? ? 1 : max_id + 1
 end
 
+def capitalize_title!(name)
+  name.split.map(&:capitalize).join(' ')
+end
+
 def recipe_exists?(name)
   @recipes.any? { |_, recipe| recipe[:title] == name }
 end
@@ -100,18 +104,18 @@ end
 post '/add' do
   # add recipe title, ingredients, directions, and notes as single file in file structure with image as additional file with same name
   # or add it to the session data structure
-  title = params[:title]
-  ingredients = params[:ingredients]
-  directions = params[:directions]
-  image = params[:image]
-  notes = params[:notes]
+  @title = capitalize_title!(params[:title])
+  @ingredients = params[:ingredients]
+  @directions = params[:directions]
+  @image = params[:image]
+  @notes = params[:notes]
 
-  error = recipe_errors?(title)
+  error = recipe_errors?(@title)
   if error
     status 422
     erb :add
   else
-    add_recipe(title, ingredients, directions, image, notes)
+    add_recipe(@title, @ingredients, @directions, @image, @notes)
     session[:message] = 'Recipe successfully added.'
     redirect '/recipes'
   end

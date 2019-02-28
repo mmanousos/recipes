@@ -45,9 +45,15 @@ Delete recipes
 Add flash message div to layout.erb
 Style flash messages
 
+Check for pre-existing recipe with identical name.
+Preserve entered data when notifying.
+
 When saving ingredients and directions to session from form, break them into separate elements in an array for each line break. Then render them back to user as separate lines.
 
-Check for pre-existing recipe with identical name.
+Create edit functionality
+* make edit routes
+* view existing content
+* save to session
 
 Register and Sign in
 * Add Bcrypt gem
