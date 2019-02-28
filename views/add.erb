@@ -3,15 +3,18 @@
 <form action="/add" method="post">
   <p>
     <label for='title'><h4>Recipe Name</h4></label>
-    <input type="text" required minlength='5' maxlength='50' id='title' name='title' value="">
+    <input type="text" required minlength='5' maxlength='50' id='title' name='title' value="<%= session[:title] %>">
   </p>
 
-  <label for='ingredients'><h4>Ingredients</h4></label>
-  <textarea type="textarea" required rows='5' cols='80' id='ingredients' name="ingredients" value=""></textarea>
-<p>
-  <label for='directions'><h4>Directions</h4></label>
-  <textarea type="textarea" required rows='5' cols='80' id='directions' name="directions" value=""></textarea>
-</p>
+  <p>
+    <label for='ingredients'><h4>Ingredients</h4></label>
+    <textarea type="textarea" required rows='5' cols='80' id='ingredients' name="ingredients" value="<%= session[:ingredients] %>"></textarea>
+  </p>
+
+  <p>
+    <label for='directions'><h4>Directions</h4></label>
+    <textarea type="textarea" required rows='5' cols='80' id='directions' name="directions" value="<%= session[:directions] %>"></textarea>
+  </p>
 
   <p>
     <label for="image"><h4>Add an image link</h4></label>
@@ -19,7 +22,7 @@
   </p>
 
   <label for='notes'><h4>Notes</h4></label>
-  <textarea type="textarea" rows='5' cols='80' id='notes' name="notes" value=""></textarea>
+  <textarea type="textarea" rows='5' cols='80' id='notes' name="notes" value="<%= session[:notes] %>"></textarea>
 
   <p>
     <button type="submit" class='add' name="button">Add</button>
