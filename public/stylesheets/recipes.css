@@ -4,6 +4,7 @@ font-family: 'Oleo Script', cursive; */
 
 body {
   font-family: 'Source Sans Pro', sans-serif;
+  background-color: #5ca3cf;
 }
 
 h1,
@@ -24,8 +25,25 @@ h4 {
   font-style: italic;
 }
 
+.flash {
+  background-color: rgb(255, 252, 25);
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
 a {
   text-decoration: none;
+}
+
+a:link,
+a:active,
+a:visited {
+  color: rgb(37, 219, 149);
+}
+
+a:hover {
+  color: rgb(20, 133, 204);
 }
 
 li {

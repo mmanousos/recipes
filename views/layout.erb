@@ -7,7 +7,13 @@
     <link rel="stylesheet" href="/stylesheets/recipes.css" type="text/css" />
   </head>
   <body>
-    <!-- Add error and success message handling here -->
     <%== yield %>
+
+    <% if session[:message] %>
+      <div class='flash italic'>
+        <%= session.delete(:message) %>
+      </div>
+    <% end %>
+
   </body>
 </html>
