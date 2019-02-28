@@ -70,6 +70,12 @@ li {
   list-style-position: inside;
 }
 
+.ingredients li,
+.directions li {
+  list-style: circle;
+  margin: auto 15px;
+}
+
 button {
   color: #fff;
   border-radius: 10px;

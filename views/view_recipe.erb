@@ -9,7 +9,9 @@
 
   <div class='ingredients'>
     <h2>Ingredients</h2>
-    <%= recipe[:ingredients] %>
+    <% recipe[:ingredients].each do |item|  %>
+      <li><%= item %></li>
+    <% end %>
     <br>
     <a href='/edit/<%= @id %>/ingredients'><button type='button' class='edit' name='edit'>Edit</button></a>
   </div>
@@ -17,7 +19,9 @@
 
   <div class='directions'>
     <h2>Directions</h2>
-    <%= recipe[:directions] %>
+    <% recipe[:directions].each do |step|  %>
+      <li><%= step %></li>
+    <% end %>
     <br>
     <a href='/edit/<%= @id %>/directions'><button type='button' class='edit' name='edit'>Edit</button></a>
   </div>

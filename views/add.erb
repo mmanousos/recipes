@@ -8,12 +8,28 @@
 
   <p>
     <label for='ingredients'><h4>Ingredients</h4></label>
-    <textarea type="textarea" required rows='5' cols='80' id='ingredients' name="ingredients" value=""><%= @ingredients || session[:ingredients] %></textarea>
+    <textarea type="textarea" required rows='5' cols='80' id='ingredients' name="ingredients" value="">
+<% if @ingredients %>
+<% @ingredients.each do |item| %>
+<%= item %>
+  <% end %>
+<% else %>
+  <%= session[:ingredients] %>
+<% end %>
+    </textarea>
   </p>
 
   <p>
     <label for='directions'><h4>Directions</h4></label>
-    <textarea type="textarea" required rows='5' cols='80' id='directions' name="directions" value=""><%= @directions || session[:directions] %></textarea>
+    <textarea type="textarea" required rows='5' cols='80' id='directions' name="directions" value="">
+<% if @directions %>
+<% @directions.each do |step| %>
+<%= step %>
+  <% end %>
+<% else %>
+  <%= session[:directions] %>
+<% end %>
+    </textarea>
   </p>
 
   <p>

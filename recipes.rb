@@ -36,6 +36,10 @@ def recipe_errors?(name)
   session[:message] = 'A recipe with that name exists.' if recipe_exists?(name)
 end
 
+def split_lines(data)
+  data_arr = data.strip.split("\r\n")
+end
+
 def add_recipe(title, ingredients, directions, image, notes)
   @recipes[next_id] = { title: title,
                         ingredients: ingredients,
@@ -105,8 +109,8 @@ post '/add' do
   # add recipe title, ingredients, directions, and notes as single file in file structure with image as additional file with same name
   # or add it to the session data structure
   @title = capitalize_title!(params[:title])
-  @ingredients = params[:ingredients]
-  @directions = params[:directions]
+  @ingredients = split_lines(params[:ingredients])
+  @directions = split_lines(params[:directions])
   @image = params[:image]
   @notes = params[:notes]
 
