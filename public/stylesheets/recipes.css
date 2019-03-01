@@ -71,7 +71,7 @@ li {
 }
 
 .ingredients li,
-.directions li {
+.instructions li {
   list-style: circle;
   margin: auto 15px;
 }
@@ -128,7 +128,7 @@ button {
   grid-row: 8 / 13;
 }
 
-.directions {
+.instructions {
   grid-column: 5 / 9;
   grid-row: 8 / 13;
 }

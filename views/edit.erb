@@ -1,0 +1,31 @@
+<h1>Edit <%= @subject %> for "<%= @recipes[@id][:title] %>"</h1>
+
+<form class="" action="/edit/<%= @id %>/<%= @subject %>" method="post">
+  <% case @subject %>
+  <% when 'Title' %>
+    <label for='title'><h4>New Name</h4></label>
+    <input type="text" name='title' required placeholder='<%= @title || @recipes[@id][:title] %>' value="<%= @title || session[:title] %>">
+  <% when 'Ingredients' %>
+  <label for='ingredients'><h4>Ingredients</h4></label>
+  <textarea type="textarea" required rows='5' cols='80' id='ingredients' name="ingredients" value="">
+<% ingredients = @recipes[@id][:ingredients] %>
+<% ingredients.each do |item| %>
+<%= item %>
+  <% end %>
+  </textarea>
+  <% when 'Instructions' %>
+  <label for='instructions'><h4>Instructions</h4></label>
+  <textarea type="textarea" required rows='5' cols='80' id='instructions' name="instructions" value="">
+<% instructions = @recipes[@id][:instructions] %>
+<% instructions.each do |step| %>
+<%= step %>
+<% end %></textarea>
+  <% when 'Notes' %>
+  <label for='notes'><h4>Notes</h4></label>
+  <textarea type="textarea" required rows='5' cols='80' id='notes' name="notes" value=""><%= @recipes[@id][:notes] %></textarea>
+  <% end %>
+  <p>
+    <button type="submit" class='edit' name="edit">Edit</button>
+    <a href="/recipe/<%= @id %>"><button type="button" class='cancel' name="cancel">Cancel</button></a>
+  </p>
+</form>

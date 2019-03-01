@@ -20,14 +20,14 @@
   </p>
 
   <p>
-    <label for='directions'><h4>Directions</h4></label>
-    <textarea type="textarea" required rows='5' cols='80' id='directions' name="directions" value="">
-<% if @directions %>
-<% @directions.each do |step| %>
+    <label for='instructions'><h4>Instructions</h4></label>
+    <textarea type="textarea" required rows='5' cols='80' id='instructions' name="instructions" value="">
+<% if @instructions %>
+<% @instructions.each do |step| %>
 <%= step %>
   <% end %>
 <% else %>
-  <%= session[:directions] %>
+  <%= session[:instructions] %>
 <% end %>
     </textarea>
   </p>

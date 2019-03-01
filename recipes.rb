@@ -40,10 +40,10 @@ def split_lines(data)
   data_arr = data.strip.split("\r\n")
 end
 
-def add_recipe(title, ingredients, directions, image, notes)
+def add_recipe(title, ingredients, instructions, image, notes)
   @recipes[next_id] = { title: title,
                         ingredients: ingredients,
-                        directions: directions,
+                        instructions: instructions,
                         image: image,
                         notes: notes
                       }
@@ -51,6 +51,18 @@ end
 
 def delete_recipe(id)
   @recipes.delete(id)
+end
+
+def empty_field?(content)
+  if content.class == String
+    content.empty? || content.strip.empty?
+  elsif content.class == Array
+    content.empty? || content.all? { |el| el.strip.empty? }
+  end
+end
+
+def update_content(id, content, key)
+  @recipes[id][key] = content
 end
 
 get '/' do
@@ -101,16 +113,94 @@ get '/add' do
   erb :add
 end
 
+get '/edit/:id/title' do
+  @id = params[:id].to_i
+  @subject = 'Title'
+  erb :edit
+end
+
+get '/edit/:id/ingredients' do
+  @id = params[:id].to_i
+  @subject = 'Ingredients'
+  erb :edit
+end
+
+get '/edit/:id/instructions' do
+  @id = params[:id].to_i
+  @subject = 'Instructions'
+  erb :edit
+end
+
+get '/edit/:id/notes' do
+  @id = params[:id].to_i
+  @subject = 'Notes'
+  erb :edit
+end
+
+post '/edit/:id/Title' do
+  @id = params[:id].to_i
+  @title = capitalize_title!(params[:title])
+  error = recipe_errors?(@title)
+  if error
+    @subject = 'Title'
+    status 422
+    erb :edit
+  else
+    update_content(@id, @title, :title)
+    redirect "/recipe/#{@id}"
+  end
+end
+
+post '/edit/:id/Ingredients' do
+  @id = params[:id].to_i
+  @ingredients = split_lines(params[:ingredients])
+  if empty_field?(@ingredients)
+    session[:message] = 'Field can not be empty.'
+    @subject = 'Ingredients'
+    status 422
+    erb :edit
+  else
+    update_content(@id, @ingredients, :ingredients)
+    redirect "/recipe/#{@id}"
+  end
+end
+
+post '/edit/:id/Instructions' do
+  @id = params[:id].to_i
+  @instructions = split_lines(params[:instructions])
+  if empty_field?(@instructions)
+    session[:message] = 'Field can not be empty.'
+    @subject = 'Instructions'
+    status 422
+    erb :edit
+  else
+    update_content(@id, @instructions, :instructions)
+    redirect "/recipe/#{@id}"
+  end
+end
+
+post '/edit/:id/Notes' do
+  @id = params[:id].to_i
+  @notes = params[:notes]
+  if empty_field?(@notes)
+    session[:message] = 'Field can not be empty.'
+    @subject = 'Notes'
+    status 422
+    erb :edit
+  else
+    update_content(@id, @notes, :notes)
+    redirect "/recipe/#{@id}"
+  end
+end
+
 get '/add/cancel' do
   redirect '/recipes'
 end
 
 post '/add' do
-  # add recipe title, ingredients, directions, and notes as single file in file structure with image as additional file with same name
-  # or add it to the session data structure
   @title = capitalize_title!(params[:title])
   @ingredients = split_lines(params[:ingredients])
-  @directions = split_lines(params[:directions])
+  @instructions = split_lines(params[:instructions])
   @image = params[:image]
   @notes = params[:notes]
 
@@ -119,7 +209,7 @@ post '/add' do
     status 422
     erb :add
   else
-    add_recipe(@title, @ingredients, @directions, @image, @notes)
+    add_recipe(@title, @ingredients, @instructions, @image, @notes)
     session[:message] = 'Recipe successfully added.'
     redirect '/recipes'
   end

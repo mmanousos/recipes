@@ -55,6 +55,10 @@ Create edit functionality
 * view existing content
 * save to session
 
+Option to add or change photo
+* if no photo present, display 'add photo' button
+* if photo exists, display 'replace' button
+
 Register and Sign in
 * Add Bcrypt gem
 * Create credentials document
