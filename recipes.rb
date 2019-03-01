@@ -204,6 +204,12 @@ post '/image/:id' do
   redirect "/recipe/#{id}"
 end
 
+post '/image/:id/delete' do
+  id = params[:id].to_i
+  @recipes[id][:image] = ''
+  redirect "/recipe/#{id}"
+end
+
 get '/add/cancel' do
   redirect '/recipes'
 end

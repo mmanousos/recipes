@@ -6,10 +6,13 @@
   </div>
 
   <% if recipe[:image].empty? %>
-    <a href="/image/<%= @id %>"><button type="button" name="button">Add photo</button></a>
+    <a href="/image/<%= @id %>"><button type="button" class='edit' name="button">Add image</button></a>
   <% else %>
     <img class='recipe_image' src='<%= recipe[:image] %>' alt='food'>
-    <a href="/image/<%= @id %>"><button type="button" name="button">Change photo</button></a>
+    <a href="/image/<%= @id %>"><button type="button" class='edit' name="button">Change image</button></a>
+    <form class="" action="/image/<%= @id %>/delete" method="post">
+      <button type="submit" class='delete' name="delete">Delete Image</button>
+    </form>
   <% end %>
 
   <div class='ingredients'>

@@ -1,6 +1,10 @@
 <% recipe = @recipes[@id] %>
 <h1>Image for <%= recipe[:title] %></h1>
-
+<% if recipe[:image] %>
+  <form class="" action="/image/<%= @id %>/delete" method="post">
+    <button type="submit" class='delete' name="delete">Delete Image</button>
+  </form>
+<% end %>
 <form class="" action="/image/<%= @id %>" method="post">
   <% if recipe[:image].empty? %>
     <label for="image"><h4>Add an image link</h4></label>
@@ -13,5 +17,5 @@
     <input type="text" id='image' required name="image" value="<%= @image || params[:image] %>">
     <button type="submit" class='edit' name="button">Update Image</button>
   <% end %>
-  <a href="/add/cancel"><button type="button" class='cancel' name="cancel">Cancel</button></a>
+  <a href="/recipe/<%= @id %>"><button type="button" class='cancel' name="cancel">Cancel</button></a>
 </form>
