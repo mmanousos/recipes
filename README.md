@@ -59,6 +59,9 @@ Option to add or change photo
 * if no photo present, display 'add photo' button
 * if photo exists, display 'replace' button
 
+* Add 'delete' image option
+* Resize image on display
+
 Register and Sign in
 * Add Bcrypt gem
 * Create credentials document

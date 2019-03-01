@@ -193,6 +193,17 @@ post '/edit/:id/Notes' do
   end
 end
 
+get '/image/:id' do
+  @id = params[:id].to_i
+  erb :image
+end
+
+post '/image/:id' do
+  id = params[:id].to_i
+  @recipes[id][:image] = params[:image]
+  redirect "/recipe/#{id}"
+end
+
 get '/add/cancel' do
   redirect '/recipes'
 end
