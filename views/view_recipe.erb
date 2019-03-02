@@ -6,27 +6,33 @@
   </div>
 
   <% if recipe[:image].empty? %>
-    <a href="/image/<%= @id %>"><button type="button" class='edit add-image' name="button">Add image</button></a>
+    <div class='image-buttons'>
+      <a href="/image/<%= @id %>"><button type="button" class='edit' name="button">Add image</button></a>
+    </div>
   <% else %>
     <img class='recipe_image' src='<%= recipe[:image] %>' alt='food'>
-    <form class="" action="/image/<%= @id %>/delete" method="post">
-      <a href="/image/<%= @id %>"><button type="button" class='edit recipe-button' name="button">Change image</button></a>
-      <button type="submit" class='delete inline' name="delete">Delete Image</button>
-    </form>
+    <div class='image-buttons'>
+      <a href="/image/<%= @id %>"><button type="button" class='edit' name="button">Change image</button></a>
+      <form class='inline' action="/image/<%= @id %>/delete" method="post">
+        <button type="submit" class='delete' name="delete">Delete Image</button>
+      </form>
+    </div>
   <% end %>
 
-  <div class='ingredients'>
-    <h2>Ingredients</h2>
-    <% recipe[:ingredients].each do |item| %><li><%= item %></li><% end %>
-    <br>
-    <a href='/edit/<%= @id %>/ingredients'><button type='button' class='edit' name='edit'>Edit</button></a>
-  </div>
+  <div class='how-to'>
+    <div class='ingredients'>
+      <h2>Ingredients</h2>
+      <% recipe[:ingredients].each do |item| %><li><%= item %></li><% end %>
+      <br>
+      <a href='/edit/<%= @id %>/ingredients'><button type='button' class='edit' name='edit'>Edit</button></a>
+    </div>
 
-  <div class='instructions'>
-    <h2>Instructions</h2>
-    <% recipe[:instructions].each do |step|  %><li><%= step %></li><% end %>
-    <br>
-    <a href='/edit/<%= @id %>/instructions'><button type='button' class='edit' name='edit'>Edit</button></a>
+    <div class='instructions'>
+      <h2>Instructions</h2>
+      <% recipe[:instructions].each do |step|  %><li><%= step %></li><% end %>
+      <br>
+      <a href='/edit/<%= @id %>/instructions'><button type='button' class='edit' name='edit'>Edit</button></a>
+    </div>
   </div>
 
   <div class='notes'>
