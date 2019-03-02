@@ -76,6 +76,8 @@ li {
   margin: auto 15px;
 }
 
+/*  BUTTONS  */
+
 button {
   color: #fff;
   border-radius: 10px;
@@ -105,7 +107,57 @@ button {
   background-color: rgb(106, 164, 200);
 }
 
+/* RECIPE DISPLAY */
+
 .recipe {
+  width: 800px;
+}
+
+.title {
+  text-align: center;
+}
+
+.recipe_image {
+  width: 600px;
+  margin: 10px 100px;
+}
+
+.recipe-button {
+  margin: 0 0 20px 280px;
+}
+
+.add-image {
+  margin: 5px 0 0 32%;
+}
+
+.ingredients {
+  float: left;
+  margin-bottom: 20px;
+}
+
+.instructions {
+  float: right;
+  margin-right: 20%;
+}
+
+.notes {
+  clear: both;
+}
+
+.edit-notes {
+  margin-top: 20px;
+}
+
+.bottom-buttons {
+  margin-left: 32%;
+}
+
+.signout {
+  margin-left: 30%;
+  margin-top: 5px;
+}
+
+/* .recipe {
   display: grid;
   width: 800px;
   grid-template-rows: 20;
@@ -119,6 +171,7 @@ button {
 }
 
 .recipe_image {
+  width: 400px;
   grid-column: 3 / 7;
   grid-row: 3 / 7;
 }
@@ -141,4 +194,4 @@ button {
 .buttons {
   grid-column: 3 / 5;
   grid-row: 19 / 19;
-}
+} */

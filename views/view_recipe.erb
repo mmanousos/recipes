@@ -6,12 +6,12 @@
   </div>
 
   <% if recipe[:image].empty? %>
-    <a href="/image/<%= @id %>"><button type="button" class='edit' name="button">Add image</button></a>
+    <a href="/image/<%= @id %>"><button type="button" class='edit add-image' name="button">Add image</button></a>
   <% else %>
     <img class='recipe_image' src='<%= recipe[:image] %>' alt='food'>
-    <a href="/image/<%= @id %>"><button type="button" class='edit' name="button">Change image</button></a>
     <form class="" action="/image/<%= @id %>/delete" method="post">
-      <button type="submit" class='delete' name="delete">Delete Image</button>
+      <a href="/image/<%= @id %>"><button type="button" class='edit recipe-button' name="button">Change image</button></a>
+      <button type="submit" class='delete inline' name="delete">Delete Image</button>
     </form>
   <% end %>
 
@@ -33,10 +33,10 @@
     <h2>Notes</h2>
     <%= recipe[:notes] %>
     <br>
-    <a href='/edit/<%= @id %>/notes'><button type='button' class='edit' name='edit'>Edit</button></a>
+    <a href='/edit/<%= @id %>/notes'><button type='button' class='edit edit-notes' name='edit'>Edit</button></a>
   </div>
 
-  <div class='buttons'>
+  <div class='bottom-buttons'>
     <a href='/add'><button type='button' class='add' name='add'>Add a Recipe</button></a>
     <a href='/recipes'><button type='button' class='return' name='return'>Back to Recipes</button></a>
     <form class='inline' action='/delete/<%= @id %>' method='post'>
