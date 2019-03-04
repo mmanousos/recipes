@@ -22,6 +22,7 @@ end
 before do
   session[:recipes] ||= {}
   @recipes = session[:recipes]
+  session[:signedin] ||= false
   @credentials = load_credentials
 end
 
@@ -32,6 +33,10 @@ helpers do
 
   def no_image?(id)
     @recipes[id][:image].empty?
+  end
+
+  def signed_in?
+    session[:signedin] == true
   end
 end
 
@@ -51,17 +56,12 @@ def invalid_username?(username)
   @credentials.keys.include?(username)
 end
 
-def signed_in?
-  session[:signedin]
+def check_credentials
+  if !signed_in?
+    session[:message] = "You must be signed in to do that."
+    redirect '/'
+  end
 end
-#
-# def check_credentials
-#   if signed_in?
-#     break
-#   else
-#     session[:message] = 'You must be signed in to do that.'
-#   end
-# end
 
 def max_recipe_id
   @recipes.keys.max
@@ -175,18 +175,20 @@ end
 
 post '/signout' do
   session.delete(:username)
-  session.delete(:signedin)
+  session[:signedin] = false
   session[:message] = 'Sign Out successful. See you again soon.'
   redirect '/'
 end
 
 get '/recipes' do
+  check_credentials
   erb :recipes
 end
 
 get '/recipe/:id' do
+  check_credentials
   id = params[:id].to_i
-  if id > max_recipe_id
+  if max_recipe_id.nil? || id > max_recipe_id
     session[:message] = "We couldn't find your requested recipe."
     redirect '/recipes'
   else
@@ -196,6 +198,7 @@ get '/recipe/:id' do
 end
 
 post '/delete/:id' do
+  check_credentials
   id = params[:id].to_i
   session[:message] = "#{@recipes[id][:title]} recipe successfully deleted."
   delete_recipe(id)
@@ -203,34 +206,40 @@ post '/delete/:id' do
 end
 
 get '/add' do
+  check_credentials
   erb :add
 end
 
 get '/edit/:id/title' do
+  check_credentials
   @id = params[:id].to_i
   @subject = 'Title'
   erb :edit
 end
 
 get '/edit/:id/ingredients' do
+  check_credentials
   @id = params[:id].to_i
   @subject = 'Ingredients'
   erb :edit
 end
 
 get '/edit/:id/instructions' do
+  check_credentials
   @id = params[:id].to_i
   @subject = 'Instructions'
   erb :edit
 end
 
 get '/edit/:id/notes' do
+  check_credentials
   @id = params[:id].to_i
   @subject = 'Notes'
   erb :edit
 end
 
 post '/edit/:id/Title' do
+  check_credentials
   @id = params[:id].to_i
   @title = capitalize_title!(params[:title])
   error = recipe_errors?(@title)
@@ -245,6 +254,7 @@ post '/edit/:id/Title' do
 end
 
 post '/edit/:id/Ingredients' do
+  check_credentials
   @id = params[:id].to_i
   @ingredients = split_lines(params[:ingredients])
   if empty_field?(@ingredients)
@@ -259,6 +269,7 @@ post '/edit/:id/Ingredients' do
 end
 
 post '/edit/:id/Instructions' do
+  check_credentials
   @id = params[:id].to_i
   @instructions = split_lines(params[:instructions])
   if empty_field?(@instructions)
@@ -273,6 +284,7 @@ post '/edit/:id/Instructions' do
 end
 
 post '/edit/:id/Notes' do
+  check_credentials
   @id = params[:id].to_i
   @notes = params[:notes]
   if empty_field?(@notes)
@@ -287,27 +299,32 @@ post '/edit/:id/Notes' do
 end
 
 get '/image/:id' do
+  check_credentials
   @id = params[:id].to_i
   erb :image
 end
 
 post '/image/:id' do
+  check_credentials
   id = params[:id].to_i
   @recipes[id][:image] = params[:image]
   redirect "/recipe/#{id}"
 end
 
 post '/image/:id/delete' do
+  check_credentials
   id = params[:id].to_i
   @recipes[id][:image] = ''
   redirect "/recipe/#{id}"
 end
 
 get '/add/cancel' do
+  check_credentials
   redirect '/recipes'
 end
 
 post '/add' do
+  check_credentials
   @title = capitalize_title!(params[:title])
   @ingredients = split_lines(params[:ingredients])
   @instructions = split_lines(params[:instructions])
