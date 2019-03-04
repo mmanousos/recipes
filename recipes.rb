@@ -2,6 +2,7 @@ require 'bcrypt'
 require 'sinatra'
 require 'sinatra/reloader'
 require 'tilt/erubis'
+require 'yaml'
 
 configure do
   enable :sessions
@@ -9,9 +10,19 @@ configure do
   set :erb, escape_html: true
 end
 
+def file_path(file)
+  File.absolute_path(file)
+end
+
+def load_credentials
+  path = file_path('users.yml')
+  YAML.load_file(path)
+end
+
 before do
   session[:recipes] ||= {}
   @recipes = session[:recipes]
+  @credentials = load_credentials
 end
 
 helpers do
@@ -22,6 +33,15 @@ helpers do
   def no_image?(id)
     @recipes[id][:image].empty?
   end
+end
+
+def invalid_credentials?(username, password)
+  !@credentials.keys.include?(username) ||
+  !@credentials[username] == password
+end
+
+def invalid_username?(username)
+  @credentials.keys.include?(username)
 end
 
 def next_id
@@ -91,11 +111,37 @@ get '/register/cancel' do
 end
 
 post '/signin' do
-  # redirect to recipes index
+  username = params[:username].to_sym
+  password = params[:password]
+  if invalid_credentials?(username, password)
+    status 422
+    session[:message] = 'Invalid credentials. Please try again or register.'
+    erb :signin
+  else
+    session[:username] = username
+    session[:message] = "Welcome, #{username}!"
+    redirect '/recipes'
+  end
 end
 
 post '/register' do
-  # redirect to recipes index
+  username = params[:username]
+  password = params[:password]
+  if invalid_username?(username)
+    session[:message] = 'Username already exists. Choose another or signin.'
+    status 422
+    erb :register
+  else
+    session[:username] = username
+    session[:message] = "New user successfully registered. Welcome, #{username}!"
+    redirect '/recipes'
+  end
+end
+
+post '/signout' do
+  session.delete(:username)
+  session[:message] = 'Sign Out successful. See you again soon.'
+  redirect '/'
 end
 
 get '/recipes' do
