@@ -68,9 +68,14 @@ Register and Sign in
 * Add Bcrypt gem
 * Create credentials document
 * Access credentials to compare username and password or write new info to it
+* verify username for registration doesn't already exist
 * create compare credentials method
 * create write new credentials method
 
 Store recipes as individual documents in file structure?
 Store images as separate files within file structure?
 Files and images should have paired name/id so can be accessed simultaneously to display to user.
+
+Write a method to display a flash message if trying to access a path that doesn't exist.
+Write a method to prevent accessing `/recipe` path unless the user is signed in.
+  Display a message 'You must be signed in to do that.'

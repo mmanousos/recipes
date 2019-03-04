@@ -35,9 +35,16 @@ helpers do
   end
 end
 
+def create_user(username, password)
+  @credentials[username] = BCrypt::Password.create(password)
+  File.open(file_path('users.yml'), 'w') do |f|
+    f.write(@credentials.to_yaml)
+  end
+end
+
 def invalid_credentials?(username, password)
   !@credentials.keys.include?(username) ||
-  !@credentials[username] == password
+  BCrypt::Password.new(@credentials[username]) != password
 end
 
 def invalid_username?(username)
@@ -125,13 +132,14 @@ post '/signin' do
 end
 
 post '/register' do
-  username = params[:username]
+  username = params[:username].to_sym
   password = params[:password]
   if invalid_username?(username)
-    session[:message] = 'Username already exists. Choose another or signin.'
+    session[:message] = 'Username already exists. Choose another or sign in.'
     status 422
     erb :register
   else
+    create_user(username, password)
     session[:username] = username
     session[:message] = "New user successfully registered. Welcome, #{username}!"
     redirect '/recipes'
