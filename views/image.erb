@@ -1,6 +1,6 @@
 <% recipe = @recipes[@id] %>
 <h1>Image for <%= recipe[:title] %></h1>
-<% if recipe[:image] %>
+<% if !no_image?(@id) %>
   <form class="" action="/image/<%= @id %>/delete" method="post">
     <button type="submit" class='delete' name="delete">Delete Image</button>
   </form>

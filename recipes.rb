@@ -17,6 +17,10 @@ helpers do
   def sort_recipes
     @recipes.sort_by { |_, recipe| recipe[:title]  }
   end
+
+  def no_image?(id)
+    @recipes[id][:image].empty?
+  end
 end
 
 def next_id
