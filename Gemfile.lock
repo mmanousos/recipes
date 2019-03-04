@@ -2,6 +2,7 @@ GEM
   remote: https://www.rubygems.org/
   specs:
     backports (3.12.0)
+    bcrypt (3.1.12)
     multi_json (1.13.1)
     mustermann (1.0.3)
     rack (2.0.6)
@@ -25,6 +26,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bcrypt
   sinatra (>= 2.0)
   sinatra-contrib
 
