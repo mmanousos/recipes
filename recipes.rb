@@ -54,9 +54,21 @@ end
 def signed_in?
   session[:signedin]
 end
+#
+# def check_credentials
+#   if signed_in?
+#     break
+#   else
+#     session[:message] = 'You must be signed in to do that.'
+#   end
+# end
+
+def max_recipe_id
+  @recipes.keys.max
+end
 
 def next_id
-  max_id = @recipes.keys.max
+  max_id = max_recipe_id
   max_id.nil? ? 1 : max_id + 1
 end
 
@@ -107,7 +119,7 @@ not_found do
     redirect '/recipes'
   else
     redirect '/'
-  end 
+  end
 end
 
 get '/' do
@@ -173,8 +185,14 @@ get '/recipes' do
 end
 
 get '/recipe/:id' do
-  @id = params[:id].to_i
-  erb :view_recipe
+  id = params[:id].to_i
+  if id > max_recipe_id
+    session[:message] = "We couldn't find your requested recipe."
+    redirect '/recipes'
+  else
+    @id = id
+    erb :view_recipe
+  end
 end
 
 post '/delete/:id' do
