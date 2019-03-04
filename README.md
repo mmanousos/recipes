@@ -62,6 +62,8 @@ Option to add or change photo
 * Add 'delete' image option
 * Resize image on display
 
+Fix grid styling of recipe page
+
 Register and Sign in
 * Add Bcrypt gem
 * Create credentials document
@@ -69,4 +71,6 @@ Register and Sign in
 * create compare credentials method
 * create write new credentials method
 
-Fix grid styling of recipe page
+Store recipes as individual documents in file structure?
+Store images as separate files within file structure?
+Files and images should have paired name/id so can be accessed simultaneously to display to user.
