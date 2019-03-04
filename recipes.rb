@@ -51,6 +51,10 @@ def invalid_username?(username)
   @credentials.keys.include?(username)
 end
 
+def signed_in?
+  session[:signedin]
+end
+
 def next_id
   max_id = @recipes.keys.max
   max_id.nil? ? 1 : max_id + 1
@@ -97,6 +101,15 @@ def update_content(id, content, key)
   @recipes[id][key] = content
 end
 
+not_found do
+  session[:message] = 'Requested page not found. Please try again.'
+  if signed_in?
+    redirect '/recipes'
+  else
+    redirect '/'
+  end 
+end
+
 get '/' do
   erb :welcome
 end
@@ -126,6 +139,7 @@ post '/signin' do
     erb :signin
   else
     session[:username] = username
+    session[:signedin] = true
     session[:message] = "Welcome, #{username}!"
     redirect '/recipes'
   end
@@ -141,6 +155,7 @@ post '/register' do
   else
     create_user(username, password)
     session[:username] = username
+    session[:signedin] = true
     session[:message] = "New user successfully registered. Welcome, #{username}!"
     redirect '/recipes'
   end
@@ -148,6 +163,7 @@ end
 
 post '/signout' do
   session.delete(:username)
+  session.delete(:signedin)
   session[:message] = 'Sign Out successful. See you again soon.'
   redirect '/'
 end
