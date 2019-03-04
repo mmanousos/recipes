@@ -5,7 +5,7 @@
     <a class='edit_title' href='/edit/<%= @id %>/title'><button type='button' class='edit' name='edit'>Edit</button></a>
   </div>
 
-  <% if recipe[:image].empty? %>
+  <% if no_image?(@id) %>
     <div class='image-buttons'>
       <a href="/image/<%= @id %>"><button type="button" class='edit' name="button">Add image</button></a>
     </div>

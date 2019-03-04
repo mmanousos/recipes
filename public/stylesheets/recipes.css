@@ -107,6 +107,10 @@ button {
   background-color: rgb(106, 164, 200);
 }
 
+.image {
+  width: 400px;
+}
+
 /* RECIPE DISPLAY */
 
 .recipe {
