@@ -37,6 +37,14 @@ helpers do
   def signed_in?
     session[:signedin] == true
   end
+
+  def get_image_path(name)
+    if name =~ /http/
+      name
+    else
+      File.join('/images', "#{session[:username].to_s}", name)
+    end
+  end
 end
 
 def create_user(username, password)
