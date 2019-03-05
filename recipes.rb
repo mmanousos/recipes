@@ -20,10 +20,9 @@ def load_credentials
 end
 
 before do
-  session[:recipes] ||= {}
-  @recipes = session[:recipes]
   session[:signedin] ||= false
   @credentials = load_credentials
+  @recipes = load_recipes(session[:username])
 end
 
 helpers do
@@ -61,6 +60,10 @@ def check_credentials
     session[:message] = "You must be signed in to do that."
     redirect '/'
   end
+end
+
+def load_recipes(username)
+  YAML.load_file(file_path("data/#{username}.yml"))
 end
 
 def max_recipe_id
@@ -182,6 +185,7 @@ end
 
 get '/recipes' do
   check_credentials
+  load_recipes(session[:username])
   erb :recipes
 end
 

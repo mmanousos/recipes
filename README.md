@@ -81,7 +81,7 @@ Store recipes as individual entries in recipe document within file structure
   * check if file exists: create or access it
     * name for user
   * store info within a YAML hash
-    * Each recipe should get its own entry in the hash. Key is the Id.
+    * Each recipe should get its own entry in the hash. Key is the Id. (as an integer not symbol)
     * title
     * ingredients
     * instructions
