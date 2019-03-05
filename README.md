@@ -72,10 +72,21 @@ Register and Sign in
 * create compare credentials method
 * create write new credentials method
 
-Store recipes as individual documents in file structure?
-Store images as separate files within file structure?
-Files and images should have paired name/id so can be accessed simultaneously to display to user.
-
 Write a method to display a flash message if trying to access a path that doesn't exist.
 Write a method to prevent accessing `/recipe` path unless the user is signed in.
   Display a message 'You must be signed in to do that.'
+
+Store recipes as individual entries in recipe document within file structure
+  recipe document should be labeled for the user (new document for each user)
+  * check if file exists: create or access it
+    * name for user
+  * store info within a YAML hash
+    * Each recipe should get its own entry in the hash. Key is the Id.
+    * title
+    * ingredients
+    * instructions
+    * image - either link as string or filename to create path to image in directory
+    * notes - empty string if blank
+Store images as separate files within file structure
+  if uploading an image - images should be in folder labeled for user
+Files and images should have paired name/id so can be accessed simultaneously to display to user and deleted at the same time
