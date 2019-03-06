@@ -43,11 +43,7 @@ helpers do
   end
 
   def get_image_path(name)
-    if name =~ /http/
-      name
-    else
-      File.join('/images', "#{session[:username].to_s}", name)
-    end
+    File.join('/images', "#{session[:username].to_s}", name)
   end
 end
 
@@ -388,3 +384,5 @@ end
 # check if username image file exists
 # create if it doesn't
 # move image to username file
+
+# verify uploading file if 'upload' / link if 'link'
