@@ -22,7 +22,11 @@ end
 before do
   session[:signedin] ||= false
   @credentials = load_credentials
-  @recipes = load_recipes(session[:username])
+  @recipes = if session[:username].nil?
+                nil
+             else
+                load_recipes(session[:username])
+             end
 end
 
 helpers do
@@ -31,7 +35,7 @@ helpers do
   end
 
   def no_image?(id)
-    @recipes[id][:image].empty?
+    @recipes[id][:image].empty? && @recipes[id][:upload].nil?
   end
 
   def signed_in?
@@ -99,13 +103,22 @@ def split_lines(data)
   data_arr = data.strip.split("\r\n")
 end
 
-def add_recipe(title, ingredients, instructions, image, notes)
+def rename_image(name)
+  extension = File.extname(name)
+  next_id.to_s + extension
+end
+
+def add_recipe(title, ingredients, instructions, image, upload, notes)
   @recipes[next_id] = { title: title,
                         ingredients: ingredients,
                         instructions: instructions,
                         image: image,
+                        upload: upload,
                         notes: notes
                       }
+  File.open("data/#{session[:username]}.yml", 'w') do |f|
+    f.write(@recipes.to_yaml)
+  end
 end
 
 def delete_recipe(id)
@@ -335,12 +348,22 @@ get '/add/cancel' do
   redirect '/recipes'
 end
 
+def check_image(choice, url)
+  case choice
+  when 'link'           then url
+  when 'none', 'upload' then ''
+  end
+end
+
 post '/add' do
   check_credentials
   @title = capitalize_title!(params[:title])
   @ingredients = split_lines(params[:ingredients])
   @instructions = split_lines(params[:instructions])
-  @image = params[:image]
+  choice = params[:image_pick]
+  image = params[:image]
+  upload = rename_image(params[:upload_image][:filename]) if choice == 'upload'
+  @image = check_image(choice, image)
   @notes = params[:notes]
 
   error = recipe_errors?(@title)
@@ -348,7 +371,7 @@ post '/add' do
     status 422
     erb :add
   else
-    add_recipe(@title, @ingredients, @instructions, @image, @notes)
+    add_recipe(@title, @ingredients, @instructions, @image, upload, @notes)
     session[:message] = 'Recipe successfully added.'
     redirect '/recipes'
   end
