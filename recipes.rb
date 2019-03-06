@@ -355,6 +355,13 @@ def check_image(choice, url)
   end
 end
 
+def save_upload(image)
+  # check if folder exists
+  path = "public/images/#{session[:username]}"
+  name = rename_image(image[:filename].to_s)
+  FileUtils.mv(image[:tempfile], File.join(path, name))
+end
+
 post '/add' do
   check_credentials
   @title = capitalize_title!(params[:title])
@@ -371,8 +378,13 @@ post '/add' do
     status 422
     erb :add
   else
+    save_upload(params[:upload_image]) if choice == 'upload'
     add_recipe(@title, @ingredients, @instructions, @image, upload, @notes)
     session[:message] = 'Recipe successfully added.'
     redirect '/recipes'
   end
 end
+
+# check if username image file exists
+# create if it doesn't
+# move image to username file
