@@ -105,8 +105,35 @@ def recipe_exists?(name)
   end
 end
 
-def recipe_errors?(name)
+def name_error?(name)
   session[:message] = 'A recipe with that name exists.' if recipe_exists?(name)
+end
+
+def image_errors?(choice, image, upload)
+  if choice == 'link' && image.empty?
+    session[:message] = 'Please provide a link to your recipe image or ' \
+                        'select "upload" to upload a file from your computer.'
+  elsif choice == 'upload' && upload.nil?
+    session[:message] = 'Please upload an image of your recipe or select ' \
+                        '"link" to provide a url to an existing image.'
+  elsif choice == 'none' && !image.empty?
+    session[:message] = 'If you would like to use a url of an existing image,' \
+                        ' please select "link" and try again.'
+  elsif choice == 'none' && upload
+    session[:message] = 'If you would like to upload your own image, please' \
+                        ' select "upload" and try again.'
+  end
+end
+
+def check_image(choice, url)
+  case choice
+  when 'link'           then url
+  when 'none', 'upload' then ''
+  end
+end
+
+def check_upload(choice)
+  rename_image(params[:upload_image][:filename]) if choice == 'upload'
 end
 
 def split_lines(data)
@@ -308,7 +335,7 @@ post '/edit/:id/Title' do
   check_credentials
   @id = params[:id].to_i
   @title = capitalize_title!(params[:title])
-  error = recipe_errors?(@title)
+  error = name_error?(@title)
   if error
     @subject = 'Title'
     status 422
@@ -389,13 +416,6 @@ get '/add/cancel' do
   redirect '/recipes'
 end
 
-def check_image(choice, url)
-  case choice
-  when 'link'           then url
-  when 'none', 'upload' then ''
-  end
-end
-
 def create_folder
   Dir.mkdir("public/images/#{session[:username]}")
 end
@@ -417,21 +437,21 @@ post '/add' do
   @ingredients = split_lines(params[:ingredients])
   @instructions = split_lines(params[:instructions])
   choice = params[:image_pick]
-  image = params[:image]
-  upload = rename_image(params[:upload_image][:filename]) if choice == 'upload'
-  @image = check_image(choice, image)
+  @image = params[:image]
+  upload = params[:upload_image] || nil
   @notes = params[:notes]
 
-  error = recipe_errors?(@title)
-  if error
+  name_error = name_error?(@title)
+  image_error = image_errors?(choice, @image, upload)
+  if name_error || image_error
     status 422
     erb :add
   else
+    @image = check_image(choice, @image)
+    upload = check_upload(choice)
     save_upload(params[:upload_image]) if choice == 'upload'
     add_recipe(@title, @ingredients, @instructions, @image, upload, @notes)
     session[:message] = 'Recipe successfully added.'
     redirect '/recipes'
   end
 end
-
-# verify uploading file if 'upload' / link if 'link'
