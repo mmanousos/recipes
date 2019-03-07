@@ -83,7 +83,11 @@ def load_recipes(username)
 end
 
 def max_recipe_id
-  @recipes.keys.max
+  if @recipes && !@recipes.empty?
+    @recipes.keys.max
+  else
+    0
+  end
 end
 
 def next_id
@@ -96,7 +100,9 @@ def capitalize_title!(name)
 end
 
 def recipe_exists?(name)
-  @recipes.any? { |_, recipe| recipe[:title] == name } if verify_recipes?
+  if verify_recipes? && @recipes.class == Hash
+    @recipes.any? { |_, recipe| recipe[:title] == name }
+  end
 end
 
 def recipe_errors?(name)
@@ -113,9 +119,7 @@ def rename_image(name)
 end
 
 def create_user_recipes(username)
-  File.open("data/#{username}.yml", 'w+') do |f|
-    f.write({}.to_yaml)
-  end
+  File.new("data/#{username}.yml", 'w+')
 end
 
 def pull_recipes
@@ -128,8 +132,15 @@ def pull_recipes
   end
 end
 
+def write_to_recipes(recipes, username)
+  File.open("data/#{username}.yml", 'w') do |f|
+    f.write(recipes.to_yaml)
+  end
+end
+
 def add_recipe(title, ingredients, instructions, image, upload, notes)
   @recipes = pull_recipes
+  @recipes ||= {}
   @recipes[next_id] = { title: title,
                         ingredients: ingredients,
                         instructions: instructions,
@@ -137,13 +148,20 @@ def add_recipe(title, ingredients, instructions, image, upload, notes)
                         upload: upload,
                         notes: notes
                       }
-  File.open("data/#{session[:username]}.yml", 'w') do |f|
-    f.write(@recipes.to_yaml)
-  end
+  write_to_recipes(@recipes, session[:username])
 end
 
 def delete_recipe(id)
+  username = session[:username]
+  @recipes = load_recipes(username)
+  image = @recipes[id][:upload]
+  delete_image(image, username) if image
   @recipes.delete(id)
+  write_to_recipes(@recipes, username)
+end
+
+def delete_image(image, username)
+  File.delete("public/images/#{username}/#{image}")
 end
 
 def empty_field?(content)
@@ -154,6 +172,8 @@ def empty_field?(content)
   end
 end
 
+# TODO: adjust so it updates the YAML file
+# update content of recipe field
 def update_content(id, content, key)
   @recipes[id][key] = content
 end
