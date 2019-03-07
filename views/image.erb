@@ -12,7 +12,11 @@
     <button type="submit" class='edit' name="button">Add Image</button>
   <% else %>
     <h4>Current image</h4>
-    <img src='<%= recipe[:image] %>' class='image' alt="food">
+    <% if !link_empty?(@id) %>
+      <img src='<%= recipe[:image] %>' class='image' alt="food">
+    <% elsif recipe[:upload] %>
+      <img src='<%= image_path(recipe[:upload]) %>' class='image' alt="food">
+    <% end %>
     <label for="image"><h4>Update image: add an image link</h4></label>
     <input type="text" id='image' required name="image" value="<%= @image || params[:image] %>">
     <button type="submit" class='edit' name="button">Update Image</button>

@@ -42,15 +42,19 @@ helpers do
     @recipes.sort_by { |_, recipe| recipe[:title]  }
   end
 
+  def link_empty?(id)
+    @recipes[id][:image].empty?
+  end
+
   def no_image?(id)
-    @recipes[id][:image].empty? && @recipes[id][:upload].nil?
+    link_empty?(id) && @recipes[id][:upload].nil?
   end
 
   def signed_in?
     session[:signedin] == true
   end
 
-  def get_image_path(name)
+  def image_path(name)
     File.join('/images', "#{session[:username].to_s}", name)
   end
 end
