@@ -11,6 +11,12 @@
     </div>
   <% elsif recipe[:image].empty? %>
     <img class='recipe_image' src='<%= get_image_path(recipe[:upload]) %>' alt='food'>
+    <div class='image-buttons'>
+      <a href="/image/<%= @id %>"><button type="button" class='edit' name="button">Change image</button></a>
+      <form class='inline' action="/image/<%= @id %>/delete" method="post">
+        <button type="submit" class='delete' name="delete">Delete Image</button>
+      </form>
+    </div>
   <% elsif recipe[:image] %>
     <img class='recipe_image' src='<%= recipe[:image] %>' alt='food'>
     <div class='image-buttons'>
