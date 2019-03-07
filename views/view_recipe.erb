@@ -11,7 +11,7 @@
     </div>
   <% elsif recipe[:image].empty? %>
     <img class='recipe_image' src='<%= get_image_path(recipe[:upload]) %>' alt='food'>
-  <% elsif recipe[:upload].nil? %>
+  <% elsif recipe[:image] %>
     <img class='recipe_image' src='<%= recipe[:image] %>' alt='food'>
     <div class='image-buttons'>
       <a href="/image/<%= @id %>"><button type="button" class='edit' name="button">Change image</button></a>

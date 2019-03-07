@@ -22,14 +22,22 @@ end
 before do
   session[:signedin] ||= false
   @credentials = load_credentials
-  @recipes = if session[:username].nil?
-                nil
-             else
-                load_recipes(session[:username])
-             end
+  @recipes = verify_file
+end
+
+def verify_file
+  if session[:username].nil?
+    nil
+  elsif verify_recipes?
+    load_recipes(session[:username])
+  end
 end
 
 helpers do
+  def verify_recipes?
+    File.exists?("data/#{session[:username]}.yml")
+  end
+
   def sort_recipes
     @recipes.sort_by { |_, recipe| recipe[:title]  }
   end
@@ -88,7 +96,7 @@ def capitalize_title!(name)
 end
 
 def recipe_exists?(name)
-  @recipes.any? { |_, recipe| recipe[:title] == name }
+  @recipes.any? { |_, recipe| recipe[:title] == name } if verify_recipes?
 end
 
 def recipe_errors?(name)
@@ -104,7 +112,24 @@ def rename_image(name)
   next_id.to_s + extension
 end
 
+def create_user_recipes(username)
+  File.open("data/#{username}.yml", 'w+') do |f|
+    f.write({}.to_yaml)
+  end
+end
+
+def pull_recipes
+  username = session[:username]
+  if verify_recipes?
+    load_recipes(username)
+  else
+   create_user_recipes(username)
+   load_recipes(username)
+  end
+end
+
 def add_recipe(title, ingredients, instructions, image, upload, notes)
+  @recipes = pull_recipes
   @recipes[next_id] = { title: title,
                         ingredients: ingredients,
                         instructions: instructions,
@@ -202,7 +227,7 @@ end
 
 get '/recipes' do
   check_credentials
-  load_recipes(session[:username])
+  load_recipes(session[:username]) if verify_recipes?
   erb :recipes
 end
 
@@ -351,8 +376,16 @@ def check_image(choice, url)
   end
 end
 
+def create_folder
+  Dir.mkdir("public/images/#{session[:username]}")
+end
+
+def directory_exists?
+  Dir.exist?("public/images/#{session[:username]}")
+end
+
 def save_upload(image)
-  # check if folder exists
+  create_folder unless directory_exists?
   path = "public/images/#{session[:username]}"
   name = rename_image(image[:filename].to_s)
   FileUtils.mv(image[:tempfile], File.join(path, name))
@@ -380,9 +413,5 @@ post '/add' do
     redirect '/recipes'
   end
 end
-
-# check if username image file exists
-# create if it doesn't
-# move image to username file
 
 # verify uploading file if 'upload' / link if 'link'

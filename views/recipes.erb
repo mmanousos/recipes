@@ -1,17 +1,18 @@
-<%= @recipes %>
-
 <h1>My Recipes</h1>
-<ul>
-  <% sort_recipes.each do |recipe| %>
-  <% id = recipe[0] %>
-  <li>
-  <a href='/recipe/<%= id %>'><%= recipe[1][:title] %></a>
-  <form class='inline' action='/delete/<%= id %>' method='post'>
-    <button type='submit' class='delete' name='delete'>Delete</button>
-  </form>
-  </li>
-  <% end %>
-</ul>
+<% if verify_recipes? %>
+  <%= @recipes %>
+  <ul>
+    <% sort_recipes.each do |recipe| %>
+    <% id = recipe[0] %>
+    <li>
+    <a href='/recipe/<%= id %>'><%= recipe[1][:title] %></a>
+    <form class='inline' action='/delete/<%= id %>' method='post'>
+      <button type='submit' class='delete' name='delete'>Delete</button>
+    </form>
+    </li>
+    <% end %>
+  </ul>
+<% end %>
 
 <form action='/signout' method='post'>
   <a href='/add'><button type='button' class='add' name='add'>Add a Recipe</button></a>
