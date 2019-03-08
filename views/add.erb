@@ -3,7 +3,7 @@
 <form enctype="multipart/form-data" action="/add" method="post">
   <p>
     <label for='title'><h4>Recipe Name*</h4></label>
-    <input type="text" required minlength='5' maxlength='50' id='title' name='title' value="<%= @title || session[:title] %>">
+    <input type="text" required minlength='3' maxlength='50' id='title' name='title' value="<%= @title || session[:title] %>">
   </p>
 
   <p>

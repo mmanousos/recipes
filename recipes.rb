@@ -386,7 +386,7 @@ post '/image/:id/delete' do
   id = params[:id].to_i
   if !link_empty?(id)
     update_content(id, '', :image)
-  elsif !@recipes[id][:upload].nil? # remove value from :upload and
+  elsif !@recipes[id][:upload].nil?
     image = @recipes[id][:upload]
     update_content(id, nil, :upload)
     delete_image(image, session[:username])
