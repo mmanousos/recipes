@@ -1,25 +1,31 @@
 <% recipe = @recipes[@id] %>
 <h1>Image for <%= recipe[:title] %></h1>
 <% if !no_image?(@id) %>
-  <form class="" action="/image/<%= @id %>/delete" method="post">
+  <form action="/image/<%= @id %>/delete" method="post">
     <button type="submit" class='delete' name="delete">Delete Image</button>
   </form>
 <% end %>
-<form class="" action="/image/<%= @id %>" method="post">
-  <% if no_image?(@id) %>
-    <label for="image"><h4>Add an image link</h4></label>
-    <input type="text" id='image' required name="image" value="<%= @image || params[:image] %>">
-    <button type="submit" class='edit' name="button">Add Image</button>
-  <% else %>
+<form enctype="multipart/form-data" action="/image/<%= @id %>" method="post">
+  <% if !no_image?(@id) %>
     <h4>Current image</h4>
     <% if !link_empty?(@id) %>
       <img src='<%= recipe[:image] %>' class='image' alt="food">
     <% elsif recipe[:upload] %>
       <img src='<%= image_path(recipe[:upload]) %>' class='image' alt="food">
     <% end %>
-    <label for="image"><h4>Update image: add an image link</h4></label>
-    <input type="text" id='image' required name="image" value="<%= @image || params[:image] %>">
-    <button type="submit" class='edit' name="button">Update Image</button>
   <% end %>
+  <br>
+  <label for="image-pick">New Image Source?*</label>
+  <input required type="radio" id='image-pick' name="image_pick" value="link">link</input>
+  <input type="radio" id='image-pick' name="image_pick" value="upload">upload</input>
+
+  <label for="image"><h4>Use an image link</h4></label>
+  <input type="text" id='image' name="image" value="<%= @image || params[:image] %>">
+
+  <label for='upload_image'><h4>Upload an image</h4></label>
+  <input type='file' id='upload_image' accept='image/*' name='upload_image' value=''>
+
+  <br><br>
+  <button type="submit" class='edit' name="button">Update Image</button>
   <a href="/recipe/<%= @id %>"><button type="button" class='cancel' name="cancel">Cancel</button></a>
 </form>

@@ -134,6 +134,6 @@ Finalize image edit page
 * if new link, add or overwrite existing
   * if upload: remove file and reference in 'upload' field
 * if new upload, add or overwrite existing
-  * if link, overwrite existing
+  * if link, overwrite existing to ''
 
-## Remember to remove TODOS from recipes.rb and @recipes from top of recipes.erb
+* Deploy on Heroku for practice.

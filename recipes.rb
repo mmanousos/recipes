@@ -137,7 +137,7 @@ def check_image(choice, url)
 end
 
 def check_upload(choice)
-  rename_image(params[:upload_image][:filename]) if choice == 'upload'
+  next_id_rename_image(params[:upload_image][:filename]) if choice == 'upload'
 end
 
 def create_folder
@@ -148,20 +148,24 @@ def directory_exists?
   Dir.exist?("public/images/#{session[:username]}")
 end
 
-def save_upload(image)
+def next_id_rename_image(name)
+  extension = File.extname(name)
+  next_id.to_s + extension
+end
+
+def current_id_rename_image(name, id)
+  extension = File.extname(name)
+  id.to_s + extension
+end
+
+def save_upload(image, name)
   create_folder unless directory_exists?
   path = "public/images/#{session[:username]}"
-  name = rename_image(image[:filename].to_s)
   FileUtils.mv(image[:tempfile], File.join(path, name))
 end
 
 def split_lines(data)
   data_arr = data.strip.split("\r\n")
-end
-
-def rename_image(name)
-  extension = File.extname(name)
-  next_id.to_s + extension
 end
 
 def create_user_recipes(username)
@@ -371,30 +375,33 @@ get '/image/:id' do
   erb :image
 end
 
-# TODO: update this to adjust image in file and/or hash
 # update image
 post '/image/:id' do
   check_credentials
-  id = params[:id].to_i
+  @id = params[:id].to_i
   choice = params[:image_pick]
-  if choice == 'link'
-    update_content(id, params[:image], :image)
-    if !@recipes[id][:upload].nil?
-      upload = @recipes[id][:upload]
-      update_content(id, upload, :upload)
-      delete_image(upload, session[:username])
+  @image = params[:image]
+  upload = params[:upload_image]
+  existing_upload = @recipes[@id][:upload]
+  error = image_errors?(choice, @image, upload)
+  if error
+    status 422
+    erb :image
+  elsif choice == 'link'
+    update_content(@id, @image, :image)
+    if !existing_upload.nil?
+      update_content(@id, nil, :upload)
+      delete_image(existing_upload, session[:username])
     end
+    redirect "/recipe/#{@id}"
   elsif choice == 'upload'
-    # get uploaded image, rename and move from temp file to user folder
-    if @recipes[id][:upload].nil?
-      # add upload file name to :upload in YAML
-      # update_content(id, upload, :upload)
-    end
-    if !link_empty?(id)
-      update_content(id, '', :image)
-    end
+    name = current_id_rename_image(upload[:filename].to_s, @id)
+    delete_image(existing_upload, session[:username]) if !existing_upload.nil?
+    save_upload(upload, name)
+    update_content(@id, name, :upload)
+    update_content(@id, '', :image) if !link_empty?(@id)
+    redirect "/recipe/#{@id}"
   end
-  redirect "/recipe/#{id}"
 end
 
 # delete image from recipe or edit views
@@ -441,9 +448,9 @@ post '/add' do
     erb :add
   else
     @image = check_image(choice, @image)
-    upload = check_upload(choice)
-    save_upload(params[:upload_image]) if choice == 'upload'
-    add_recipe(@title, @ingredients, @instructions, @image, upload, @notes)
+    upload_name = check_upload(choice)
+    save_upload(params[:upload_image], upload_name) if choice == 'upload'
+    add_recipe(@title, @ingredients, @instructions, @image, upload_name, @notes)
     session[:message] = 'Recipe successfully added.'
     redirect '/recipes'
   end

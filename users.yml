@@ -1,6 +1,6 @@
 ---
-:newuser9: !ruby/string:BCrypt::Password
-  str: "$2a$10$z41kPPiy/PB/lk30dlFBcu0ldHLnVc1YAASUksK2YqM.7k5OzTwWW"
+:developer: !ruby/string:BCrypt::Password
+  str: "$2a$10$tSndtiFbLFG61xMPV2PGCueqWfM.pBs1sbGxg8PDR69.yvowM.64W"
   version: 2a
   cost: 10
   salt: "$2a$10$z41kPPiy/PB/lk30dlFBcu"
