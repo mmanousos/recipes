@@ -109,8 +109,8 @@ add recipe
 
  * Need edit button for uploaded images
  * adjust edit route for content
-change edit routes to not require capitalization?
-
+  * simplify edit route
+  * change edit route to not require capitalization
 
 Working with deleting files
 * `FileUtils.rm_rf` - removes entire directory even if it's not empty
@@ -126,5 +126,14 @@ Operation not permitted @ apply2files - public/images/newuser5/`
 * verify uploading file if 'upload' / link if 'link'
 
 * show edit link for view_recipe page with uploaded images
+
+Finalize image edit page
+* add upload / link chooser on edit image view
+* add 'upload' image link from edit image view
+* rename & upload image (will automatically overwrite existing image?)
+* if new link, add or overwrite existing
+  * if upload: remove file and reference in 'upload' field
+* if new upload, add or overwrite existing
+  * if link, overwrite existing
 
 ## Remember to remove TODOS from recipes.rb and @recipes from top of recipes.erb

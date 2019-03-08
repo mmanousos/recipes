@@ -376,7 +376,24 @@ end
 post '/image/:id' do
   check_credentials
   id = params[:id].to_i
-  @recipes[id][:image] = params[:image]
+  choice = params[:image_pick]
+  if choice == 'link'
+    update_content(id, params[:image], :image)
+    if !@recipes[id][:upload].nil?
+      upload = @recipes[id][:upload]
+      update_content(id, upload, :upload)
+      delete_image(upload, session[:username])
+    end
+  elsif choice == 'upload'
+    # get uploaded image, rename and move from temp file to user folder
+    if @recipes[id][:upload].nil?
+      # add upload file name to :upload in YAML
+      # update_content(id, upload, :upload)
+    end
+    if !link_empty?(id)
+      update_content(id, '', :image)
+    end
+  end
   redirect "/recipe/#{id}"
 end
 
