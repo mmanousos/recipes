@@ -90,3 +90,41 @@ Store recipes as individual entries in recipe document within file structure
 Store images as separate files within file structure
   if uploading an image - images should be in folder labeled for user
 Files and images should have paired name/id so can be accessed simultaneously to display to user and deleted at the same time
+
+Create new user - store username and hashed password in users.yml file.
+there is no file for recipes yet.
+create recipe file once first recipe is added.
+  in add route, check if the file already exists.
+    if no, create
+    if yes, write to existing
+
+
+Display welcome screen
+  sign in or register
+if signed in
+  add a recipe or recipes
+add recipe
+  checks
+    either loads or creates recipes document named for user
+
+ * Need edit button for uploaded images
+ * adjust edit route for content
+change edit routes to not require capitalization?
+
+
+Working with deleting files
+* `FileUtils.rm_rf` - removes entire directory even if it's not empty
+* `FileUtils.rm_r` - removes entire directory even if it's not empty
+* `FileUtils.rm_f` - force remove; doesn't do anything
+`Errno::EPERM at /delete/1
+Operation not permitted @ apply2files - public/images/newuser5/`
+* `File.unlink`
+* `FileUtils.remove_file`
+* `File.delete`
+- these errors were because I was not accessing the contents of the hash correctly (omitting the key prevented me from accessing the file name). After correcting that, `File.delete` worked perfectly!
+
+* verify uploading file if 'upload' / link if 'link'
+
+* show edit link for view_recipe page with uploaded images
+
+## Remember to remove TODOS from recipes.rb and @recipes from top of recipes.erb
