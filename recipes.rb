@@ -380,12 +380,17 @@ post '/image/:id' do
   redirect "/recipe/#{id}"
 end
 
-# TODO: update this to delete from file & hash
 # delete image from recipe or edit views
 post '/image/:id/delete' do
   check_credentials
   id = params[:id].to_i
-  @recipes[id][:image] = ''
+  if !link_empty?(id)
+    update_content(id, '', :image)
+  elsif !@recipes[id][:upload].nil? # remove value from :upload and
+    image = @recipes[id][:upload]
+    update_content(id, nil, :upload)
+    delete_image(image, session[:username])
+  end
   redirect "/recipe/#{id}"
 end
 
@@ -401,7 +406,7 @@ get '/add/cancel' do
   redirect '/recipes'
 end
 
-# adds new recipe
+# add new recipe
 post '/add' do
   check_credentials
   @title = capitalize_title!(params[:title])
