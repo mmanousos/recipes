@@ -1,8 +1,7 @@
 ---
-:developer: "$2a$10$HnGUpCrlJ/9EHKpTnLS.IeOXGiFHJRsYwGauVqTd8n3yiaxnKsHPW"
-:user2: !ruby/string:BCrypt::Password
-  str: "$2a$10$0BmyE0bOUAr5KsgiMgF4B.ZzPJ4Agf9VbBvlN8znTxFJHybK0F1Vi"
+:newuser9: !ruby/string:BCrypt::Password
+  str: "$2a$10$z41kPPiy/PB/lk30dlFBcu0ldHLnVc1YAASUksK2YqM.7k5OzTwWW"
   version: 2a
   cost: 10
-  salt: "$2a$10$0BmyE0bOUAr5KsgiMgF4B."
-  checksum: ZzPJ4Agf9VbBvlN8znTxFJHybK0F1Vi
+  salt: "$2a$10$z41kPPiy/PB/lk30dlFBcu"
+  checksum: 0ldHLnVc1YAASUksK2YqM.7k5OzTwWW
