@@ -140,6 +140,21 @@ def check_upload(choice)
   rename_image(params[:upload_image][:filename]) if choice == 'upload'
 end
 
+def create_folder
+  Dir.mkdir("public/images/#{session[:username]}")
+end
+
+def directory_exists?
+  Dir.exist?("public/images/#{session[:username]}")
+end
+
+def save_upload(image)
+  create_folder unless directory_exists?
+  path = "public/images/#{session[:username]}"
+  name = rename_image(image[:filename].to_s)
+  FileUtils.mv(image[:tempfile], File.join(path, name))
+end
+
 def split_lines(data)
   data_arr = data.strip.split("\r\n")
 end
@@ -203,41 +218,47 @@ def empty_field?(content)
   end
 end
 
-# TODO: adjust so it updates the YAML file
-# update content of recipe field
+def content_error?(content)
+  session[:message] = 'Field can not be empty.' if empty_field?(content)
+end
+
+# update content of singular recipe field
 def update_content(id, content, key)
   @recipes[id][key] = content
+  write_to_recipes(@recipes, session[:username])
 end
 
 not_found do
   session[:message] = 'Requested page not found. Please try again.'
-  if signed_in?
-    redirect '/recipes'
-  else
-    redirect '/'
-  end
+  signed_in? ? (redirect '/recipes') : (redirect '/')
 end
 
+# display welcome view
 get '/' do
   erb :welcome
 end
 
+# display sign in view
 get '/signin' do
   erb :signin
 end
 
+# display register view
 get '/register' do
   erb :register
 end
 
+# return to welcome page from sign in view
 get '/signin/cancel' do
   redirect '/'
 end
 
+# return to welcome page from register view
 get '/register/cancel' do
   redirect '/'
 end
 
+# sign in existing user
 post '/signin' do
   username = params[:username].to_sym
   password = params[:password]
@@ -253,6 +274,7 @@ post '/signin' do
   end
 end
 
+# register new user
 post '/register' do
   username = params[:username].to_sym
   password = params[:password]
@@ -269,6 +291,7 @@ post '/register' do
   end
 end
 
+# sign out
 post '/signout' do
   session.delete(:username)
   session[:signedin] = false
@@ -276,12 +299,14 @@ post '/signout' do
   redirect '/'
 end
 
+# load recipes index
 get '/recipes' do
   check_credentials
   load_recipes(session[:username]) if verify_recipes?
   erb :recipes
 end
 
+# load individual recipe
 get '/recipe/:id' do
   check_credentials
   id = params[:id].to_i
@@ -294,6 +319,7 @@ get '/recipe/:id' do
   end
 end
 
+# delete individual recipe
 post '/delete/:id' do
   check_credentials
   id = params[:id].to_i
@@ -302,105 +328,51 @@ post '/delete/:id' do
   redirect '/recipes'
 end
 
-get '/add' do
-  check_credentials
-  erb :add
-end
-
-get '/edit/:id/title' do
+# load edit contents view
+get '/edit/:id/:subject' do
   check_credentials
   @id = params[:id].to_i
-  @subject = 'Title'
+  @subject = params[:subject]
   erb :edit
 end
 
-get '/edit/:id/ingredients' do
+# edit content
+post '/edit/:id/:subject' do
   check_credentials
   @id = params[:id].to_i
-  @subject = 'Ingredients'
-  erb :edit
-end
-
-get '/edit/:id/instructions' do
-  check_credentials
-  @id = params[:id].to_i
-  @subject = 'Instructions'
-  erb :edit
-end
-
-get '/edit/:id/notes' do
-  check_credentials
-  @id = params[:id].to_i
-  @subject = 'Notes'
-  erb :edit
-end
-
-post '/edit/:id/Title' do
-  check_credentials
-  @id = params[:id].to_i
-  @title = capitalize_title!(params[:title])
-  error = name_error?(@title)
+  @subject = params[:subject]
+  @content = params[@subject.to_sym]
+  case @subject
+  when 'title'
+    @content = capitalize_title!(@content)
+    error = name_error?(@content)
+  when 'ingredients'
+    @content = split_lines(@content)
+    error = content_error?(@content)
+  when 'instructions'
+    @content = split_lines(@content)
+    error = content_error?(@content)
+  when 'notes'
+    error = content_error?(@content)
+  end
   if error
-    @subject = 'Title'
     status 422
     erb :edit
   else
-    update_content(@id, @title, :title)
+    update_content(@id, @content, @subject.to_sym)
     redirect "/recipe/#{@id}"
   end
 end
 
-post '/edit/:id/Ingredients' do
-  check_credentials
-  @id = params[:id].to_i
-  @ingredients = split_lines(params[:ingredients])
-  if empty_field?(@ingredients)
-    session[:message] = 'Field can not be empty.'
-    @subject = 'Ingredients'
-    status 422
-    erb :edit
-  else
-    update_content(@id, @ingredients, :ingredients)
-    redirect "/recipe/#{@id}"
-  end
-end
-
-post '/edit/:id/Instructions' do
-  check_credentials
-  @id = params[:id].to_i
-  @instructions = split_lines(params[:instructions])
-  if empty_field?(@instructions)
-    session[:message] = 'Field can not be empty.'
-    @subject = 'Instructions'
-    status 422
-    erb :edit
-  else
-    update_content(@id, @instructions, :instructions)
-    redirect "/recipe/#{@id}"
-  end
-end
-
-post '/edit/:id/Notes' do
-  check_credentials
-  @id = params[:id].to_i
-  @notes = params[:notes]
-  if empty_field?(@notes)
-    session[:message] = 'Field can not be empty.'
-    @subject = 'Notes'
-    status 422
-    erb :edit
-  else
-    update_content(@id, @notes, :notes)
-    redirect "/recipe/#{@id}"
-  end
-end
-
+# load image edit view
 get '/image/:id' do
   check_credentials
   @id = params[:id].to_i
   erb :image
 end
 
+# TODO: update this to adjust image in file and/or hash
+# update image
 post '/image/:id' do
   check_credentials
   id = params[:id].to_i
@@ -408,6 +380,8 @@ post '/image/:id' do
   redirect "/recipe/#{id}"
 end
 
+# TODO: update this to delete from file & hash
+# delete image from recipe or edit views
 post '/image/:id/delete' do
   check_credentials
   id = params[:id].to_i
@@ -415,26 +389,19 @@ post '/image/:id/delete' do
   redirect "/recipe/#{id}"
 end
 
+# load add recipe view
+get '/add' do
+  check_credentials
+  erb :add
+end
+
+# cancel add recipe view - return to recipes index
 get '/add/cancel' do
   check_credentials
   redirect '/recipes'
 end
 
-def create_folder
-  Dir.mkdir("public/images/#{session[:username]}")
-end
-
-def directory_exists?
-  Dir.exist?("public/images/#{session[:username]}")
-end
-
-def save_upload(image)
-  create_folder unless directory_exists?
-  path = "public/images/#{session[:username]}"
-  name = rename_image(image[:filename].to_s)
-  FileUtils.mv(image[:tempfile], File.join(path, name))
-end
-
+# adds new recipe
 post '/add' do
   check_credentials
   @title = capitalize_title!(params[:title])
